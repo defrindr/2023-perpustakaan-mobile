@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:elevation="5dp"
+    android:padding="10dp"
+    app:cardElevation="2dp"
+    tools:context=".PeminjamanAdapter">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/uid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ID Pinjam"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/user_reference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Peminjam"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/book_reference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Buku"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tgl_pinjam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Tgl Pinjam"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tgl_kembali"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Tgl Kembali"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/denda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Rp 0"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Status"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnHapus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Hapus" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnTolak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Tolak" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnSetuju"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/greenDark"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Setuju" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnKembali"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Kembalikan" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnTolakKembali"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Tolak kembali" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnSetujuKembali"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/greenDark"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Setujui Kembali" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

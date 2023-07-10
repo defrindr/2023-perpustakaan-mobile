@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "509522038341",
+    "firebase_url": "https://perpustakaan-mini-default-rtdb.firebaseio.com",
+    "project_id": "perpustakaan-mini",
+    "storage_bucket": "perpustakaan-mini.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509522038341:android:e53425a5205fe412c19d2c",
+        "android_client_info": {
+          "package_name": "com.example.perpusarum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509522038341-u31kivvdqce715uaitv9idsvva9cs344.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs-8IiOQP6VSB5zKx1R8I62yCwf2n-8fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509522038341-u31kivvdqce715uaitv9idsvva9cs344.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509522038341:android:bca6472605deb3d6c19d2c",
+        "android_client_info": {
+          "package_name": "com.example.perpusmini"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509522038341-u31kivvdqce715uaitv9idsvva9cs344.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs-8IiOQP6VSB5zKx1R8I62yCwf2n-8fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509522038341-u31kivvdqce715uaitv9idsvva9cs344.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".controllers.Peminjam.PeminjamHome">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HALAMAN PEMINJAM"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/adminWelcomeMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:layout_marginBottom="20dp"
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/findBook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Cari Book" />
+
+            <Button
+                android:id="@+id/listBorrow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Daftar Pinjaman" />
+
+            <Button
+                android:id="@+id/updateProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Ubah Profile" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:id="@+id/logOut"
+                android:background="#FF0000"
+                android:textColor="@color/white"
+                android:text="keluar"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>
