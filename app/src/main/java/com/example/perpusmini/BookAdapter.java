@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.perpusmini.controllers.Admin.UbahBuku;
 import com.example.perpusmini.controllers.Peminjam.Pinjam;
 import com.example.perpusmini.enums.Role;
+import com.example.perpusmini.helpers.DownloadImageTask;
 import com.example.perpusmini.models.Book;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -71,6 +73,10 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
             }
         }
 
+
+        // show The Image in a ImageView
+        new DownloadImageTask(holder.imageView).execute(model.getGambar());
+
         holder.btnAksiPinjam.setVisibility(View.GONE);
         holder.btnAksiUbah.setVisibility(View.GONE);
         holder.btnAksiHapus.setVisibility(View.GONE);
@@ -96,6 +102,8 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
         TextView bookName, bookId, bookType, bookAvailable, bookTotal;
         Button btnAksiPinjam, btnAksiHapus, btnAksiUbah;
 
+        ImageView imageView;
+
         public Book(@NonNull View itemView, @NonNull Context ctx) {
             super(itemView);
             bookId = itemView.findViewById(R.id.bookId);
@@ -109,7 +117,7 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
             btnAksiPinjam = itemView.findViewById(R.id.aksiPinjamBuku);
             btnAksiHapus = itemView.findViewById(R.id.aksiHapusBuku);
             btnAksiUbah = itemView.findViewById(R.id.aksiUbah);
-
+            imageView = itemView.findViewById(R.id.imageView);
 
             btnAksiHapus.setOnClickListener(
                     new View.OnClickListener() {

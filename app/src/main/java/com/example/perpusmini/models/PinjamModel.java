@@ -4,7 +4,7 @@ import com.example.perpusmini.enums.StatusPinjam;
 
 public class PinjamModel {
     private  String uid, tglPinjam, tglKembali, buku_reference, user_reference;
-    private int denda;
+    private int denda, rating;
     private StatusPinjam status;
     private Book buku;
     private User user;
@@ -21,6 +21,15 @@ public class PinjamModel {
         this.status = status;
         this.buku = buku;
         this.user = user;
+        this.rating = 0;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public Book getBuku() {

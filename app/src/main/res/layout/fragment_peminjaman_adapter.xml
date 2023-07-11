@@ -135,6 +135,16 @@
                 android:textColor="@color/white"
                 android:layout_margin="4dp"
                 android:text="Setujui Kembali" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnGiveRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:layout_margin="4dp"
+                android:text="Beri Rating" />
         </LinearLayout>
     </LinearLayout>
 

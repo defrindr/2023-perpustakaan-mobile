@@ -1,10 +1,12 @@
 package com.example.perpusmini;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.example.perpusmini.enums.StatusPinjam;
 import com.example.perpusmini.helpers.Helper;
 import com.example.perpusmini.models.Book;
 import com.example.perpusmini.models.PinjamModel;
+import com.example.perpusmini.models.User;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.function.Consumer;
 
 public class DaftarPeminjaman extends AppCompatActivity {
 
@@ -33,6 +37,9 @@ public class DaftarPeminjaman extends AppCompatActivity {
     private RecyclerView rvPinjam;
     private PeminjamanAdapter pAdapter;
     private Helper helper;
+
+    private Book modelBook;
+    private Role role;
 
 
     @Override
@@ -48,6 +55,7 @@ public class DaftarPeminjaman extends AppCompatActivity {
         rvPinjam = findViewById(R.id.recycle);
         tvNotfound = findViewById(R.id.ifNoBorrow);
 
+        role = (Role) getIntent().getSerializableExtra("LEVEL");
 
         setupPeminjamanAdapter(false);
     }
@@ -65,7 +73,10 @@ public class DaftarPeminjaman extends AppCompatActivity {
 
     private void setupPeminjamanAdapter(boolean withFilter) {
         query = fStore.collection(CollectionHelper.pinjam);
-        FirestoreRecyclerOptions options = new FirestoreRecyclerOptions.Builder<PinjamModel>().setQuery(query, PinjamModel.class).build();
+        if (role == Role.PEMINJAM) {
+            query.whereEqualTo("user_reference", fAuth.getCurrentUser().getEmail());
+        }
+        FirestoreRecyclerOptions<? extends PinjamModel> options = new FirestoreRecyclerOptions.Builder<PinjamModel>().setQuery(query, PinjamModel.class).build();
         pAdapter = new PeminjamanAdapter(this, options);
 
         Role value = (Role) getIntent().getSerializableExtra("LEVEL");
@@ -110,17 +121,7 @@ public class DaftarPeminjaman extends AppCompatActivity {
             return;
         }
 
-        fStore.collection(CollectionHelper.pinjam).document(model.getUid()).update("status", StatusPinjam.DITOLAK).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                helper.toastMessage("Status berhasil diubah");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                helper.toastMessage("Status gagal diubah");
-            }
-        });
+        updateStatusPinjam(model.getUid(), StatusPinjam.DITOLAK);
     }
 
     public void setujui(PinjamModel model) {
@@ -129,18 +130,9 @@ public class DaftarPeminjaman extends AppCompatActivity {
             return;
         }
 
-        updateJumlahBuku(model.getBuku(), false);
 
-        fStore.collection(CollectionHelper.pinjam).document(model.getUid()).update("status", StatusPinjam.DIPINJAM).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                helper.toastMessage("Status berhasil diubah");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                helper.toastMessage("Status gagal diubah");
-            }
+        updateJumlahBuku(model.getBuku(), false, () -> {
+            updateStatusPinjam(model.getUid(), StatusPinjam.DIPINJAM);
         });
     }
 
@@ -150,17 +142,7 @@ public class DaftarPeminjaman extends AppCompatActivity {
             return;
         }
 
-        fStore.collection(CollectionHelper.pinjam).document(model.getUid()).update("status", StatusPinjam.MENUNGGU_PERSETUJUAN_KEMBALI).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                helper.toastMessage("Status berhasil diubah");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                helper.toastMessage("Status gagal diubah");
-            }
-        });
+        updateStatusPinjam(model.getUid(), StatusPinjam.MENUNGGU_PERSETUJUAN_KEMBALI);
     }
 
 
@@ -170,17 +152,7 @@ public class DaftarPeminjaman extends AppCompatActivity {
             return;
         }
 
-        fStore.collection(CollectionHelper.pinjam).document(model.getUid()).update("status", StatusPinjam.DIPINJAM).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                helper.toastMessage("Status berhasil diubah");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                helper.toastMessage("Status gagal diubah");
-            }
-        });
+        updateStatusPinjam(model.getUid(), StatusPinjam.DIPINJAM);
     }
 
 
@@ -190,40 +162,42 @@ public class DaftarPeminjaman extends AppCompatActivity {
             return;
         }
 
-        updateJumlahBuku(model.getBuku(), true);
-
-        fStore.collection(CollectionHelper.pinjam).document(model.getUid()).update("status", StatusPinjam.DIKEMBALIKAN).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                helper.toastMessage("Status berhasil diubah");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                helper.toastMessage("Status gagal diubah");
-            }
+        updateJumlahBuku(model.getBuku(), true, () -> {
+            updateStatusPinjam(model.getUid(), StatusPinjam.DIKEMBALIKAN);
         });
     }
 
-    public void updateJumlahBuku(Book model, boolean tambah) {
-        fStore.collection(CollectionHelper.buku).document(model.getIsbn()).get().addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+    public void updateStatusPinjam(String uid, StatusPinjam status) {
+        fStore.collection(CollectionHelper.pinjam).document(uid).update("status", status).addOnSuccessListener(Void -> {
+            helper.toastMessage("Status berhasil diubah");
+        }).addOnFailureListener(error -> {
+            helper.toastMessage("Status gagal diubah : " + error.getMessage());
+        });
+    }
 
-            }
-        }).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Book newModel = documentSnapshot.toObject(Book.class);
-                int stok = newModel.getStok();
-                if(tambah){
-                    stok += 1;
-                } else {
-                    stok -= 1;
-                }
+    public void updateJumlahBuku(Book model, boolean tambah, Runnable runnable) {
+        fStore.collection(CollectionHelper.buku).document(model.getIsbn()).get().addOnFailureListener(e -> {
+            helper.toastMessage("Gagal mengupdate buku");
+        }).addOnSuccessListener(documentSnapshot -> {
 
-                fStore.collection(CollectionHelper.buku).document(newModel.getIsbn()).update("stok", stok);
+            modelBook = documentSnapshot.toObject(Book.class);
+            int stok = modelBook.getAvailable();
+
+            if (tambah) {
+                stok += 1;
+            } else {
+                stok -= 1;
             }
+
+            if (stok < 0) {
+                helper.toastMessage("Stok kurang dari 1");
+                return;
+            }
+
+            fStore.collection(CollectionHelper.buku).document(modelBook.getIsbn()).update("available", stok).addOnSuccessListener(unused -> {
+                runnable.run();
+            }).addOnFailureListener(e -> {
+            });
         });
     }
 

@@ -6,4 +6,5 @@ public enum StatusPinjam {
     DITOLAK,
     MENUNGGU_PERSETUJUAN_KEMBALI,
     DIKEMBALIKAN,
+    SELESAI,
 }

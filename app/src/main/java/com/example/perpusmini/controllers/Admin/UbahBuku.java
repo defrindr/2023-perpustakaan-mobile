@@ -25,6 +25,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
+
 public class UbahBuku extends AppCompatActivity {
 
     Button button1;
@@ -65,6 +67,7 @@ public class UbahBuku extends AppCompatActivity {
         editStok = findViewById(R.id.editStok);
         editGambar = findViewById(R.id.editGambar);
         editKategori = (Spinner) findViewById(R.id.spinner1);
+
         button1 = (Button) findViewById(R.id.button1);
         p1 = new ProgressDialog(this);
         p1.setCancelable(false);
@@ -77,6 +80,7 @@ public class UbahBuku extends AppCompatActivity {
 
 
         editIsbn.setEnabled(false);
+        editRating.setEnabled(false);
 //        get id
         isbn = getIntent().getStringExtra("ISBN");
 
@@ -105,10 +109,11 @@ public class UbahBuku extends AppCompatActivity {
     }
 
     private  void setupFields() {
+        double resultRating = model.getRatingAvg();
         setFieldValue(editIsbn, model.getIsbn());
         setFieldValue(editJudul, model.getJudul());
         setFieldValue(editPengarang, model.getPengarang());
-        setFieldValue(editRating, String.valueOf(model.getRating()));
+        setFieldValue(editRating, String.valueOf(resultRating));
         setFieldValue(editGambar, model.getGambar());
         setFieldValue(editStok, String.valueOf(model.getStok()));
 
@@ -181,6 +186,6 @@ public class UbahBuku extends AppCompatActivity {
         int stok = Integer.parseInt(helper.getValue(editStok));
         String gambar = helper.getValue(editGambar);
 
-        return new Book(isbn, judul, pengarang, rating, stok, gambar, type);
+        return new Book(isbn, judul, pengarang, model.getRating(), stok, gambar, type);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.perpusmini.controllers.Admin;
 
+import static java.lang.Boolean.FALSE;
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -21,6 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddBook extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,7 +61,13 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
         editStok = findViewById(R.id.editStok);
         editGambar = findViewById(R.id.editGambar);
         editKategori = (Spinner) findViewById(R.id.spinner1);
+
+        editRating.getEditText().setText(String.valueOf(0));
+        editRating.setEnabled(FALSE);
+
         button1 = (Button) findViewById(R.id.button1);
+
+
         p1 = new ProgressDialog(this);
         p1.setCancelable(false);
         db = FirebaseFirestore.getInstance();
@@ -106,7 +117,7 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                     String isbn = helper.getValue(editIsbn);
                     String judul = helper.getValue(editJudul).toUpperCase();
                     String pengarang = helper.getValue(editPengarang);
-                    int rating = Integer.parseInt(helper.getValue(editRating));
+                    List<Integer> rating = new ArrayList<Integer>();
                     int stok = Integer.parseInt(helper.getValue(editStok));
                     String gambar = helper.getValue(editGambar);
 

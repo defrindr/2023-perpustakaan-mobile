@@ -1,21 +1,30 @@
 package com.example.perpusmini.models;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.perpusmini.enums.KategoriBuku;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 public class Book {
 
     private String judul, pengarang, gambar, isbn;
     private KategoriBuku kategori;
-    private int stok = 0, available = 0, rating = 1;
+    private int stok = 0, available = 0;
+
+    private List<Integer> rating = new ArrayList<Integer>();
 
     public Book() {
     }
 
-    public Book(String isbn, String judul, String pengarang, int rating, int stok, String gambar, KategoriBuku kategori) {
+    public Book(String isbn, String judul, String pengarang, List<Integer> rating, int stok, String gambar, KategoriBuku kategori) {
         this.isbn = isbn;
         this.judul = judul;
         this.pengarang = pengarang;
@@ -24,6 +33,30 @@ public class Book {
         this.available = stok;
         this.gambar = gambar;
         this.kategori = kategori;
+    }
+
+    public double getRatingAvg() {
+
+        List<Integer> rating = this.rating;
+        double resultRating = 0;
+
+        if(rating.size() > 0) {
+            resultRating = findSumWithoutUsingStream(rating) / rating.size();
+        }
+
+        return resultRating;
+    }
+
+    public void addRating(int rating) {
+        this.rating.add(rating);
+    }
+
+    public static int findSumWithoutUsingStream(List<Integer> array) {
+        int sum = 0;
+        for (int value : array) {
+            sum += value;
+        }
+        return sum;
     }
 
     public KategoriBuku getKategori() {
@@ -82,11 +115,11 @@ public class Book {
         this.available = available;
     }
 
-    public int getRating() {
+    public List<Integer> getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(List<Integer> rating) {
         this.rating = rating;
     }
 }

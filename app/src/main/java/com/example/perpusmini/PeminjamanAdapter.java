@@ -1,14 +1,18 @@
 package com.example.perpusmini;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.perpusmini.controllers.Peminjam.BeriRating;
 import com.example.perpusmini.enums.Role;
 import com.example.perpusmini.enums.StatusPinjam;
 import com.example.perpusmini.helpers.Helper;
@@ -79,12 +83,15 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
         holder.btnKembali.setVisibility(View.GONE);
         holder.btnTolakKembali.setVisibility(View.GONE);
         holder.btnSetujuKembali.setVisibility(View.GONE);
+        holder.btnGiveRating.setVisibility(View.GONE);
 
         if (role == Role.PEMINJAM) {
             if (model.getStatus() == StatusPinjam.MENUNGGU_PERSETUJUAN_PINJAM) {
                 holder.btnHapus.setVisibility(View.VISIBLE);
             } else if (model.getStatus() == StatusPinjam.DIPINJAM) {
                 holder.btnKembali.setVisibility(View.VISIBLE);
+            } else if (model.getStatus() == StatusPinjam.DIKEMBALIKAN) {
+                holder.btnGiveRating.setVisibility(View.VISIBLE);
             }
         } else {
             if (model.getStatus() == StatusPinjam.MENUNGGU_PERSETUJUAN_PINJAM) {
@@ -108,7 +115,7 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
         Context context;
         PinjamModel model;
         private TextView tvUid, tvUserReference, tvBukuReference, tvTglPinjam, tvTglKembali, tvDenda, tvStatus;
-        private Button btnHapus, btnTolak, btnSetuju, btnKembali, btnTolakKembali, btnSetujuKembali;
+        private Button btnHapus, btnTolak, btnSetuju, btnKembali, btnTolakKembali, btnSetujuKembali, btnGiveRating;
 
         public Pinjam(@NonNull View itemView, @NonNull Context ctx) {
             super(itemView);
@@ -130,65 +137,49 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
             btnKembali = itemView.findViewById(R.id.btnKembali);
             btnTolakKembali = itemView.findViewById(R.id.btnTolakKembali);
             btnSetujuKembali = itemView.findViewById(R.id.btnSetujuKembali);
+            btnGiveRating = itemView.findViewById(R.id.btnGiveRating);
 
-
-            btnHapus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof DaftarPeminjaman) {
-                        ((DaftarPeminjaman) context).hapus(model);
-                    }
-                }
+            clickHelper(btnHapus, () -> {
+                ((DaftarPeminjaman) context).hapus(model);
             });
 
-            btnTolak.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof DaftarPeminjaman) {
-                        ((DaftarPeminjaman) context).tolak(model);
-                    }
-                }
+            clickHelper(btnTolak, () -> {
+                ((DaftarPeminjaman) context).tolak(model);
             });
 
-            btnSetuju.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof DaftarPeminjaman) {
-                        ((DaftarPeminjaman) context).setujui(model);
-                    }
-                }
+            clickHelper(btnSetuju, () -> {
+                ((DaftarPeminjaman) context).setujui(model);
             });
 
-
-            btnKembali.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof DaftarPeminjaman) {
-                        ((DaftarPeminjaman) context).kembalikan(model);
-                    }
-                }
+            clickHelper(btnKembali, () -> {
+                ((DaftarPeminjaman) context).kembalikan(model);
             });
 
-            btnTolakKembali.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof DaftarPeminjaman) {
-                        ((DaftarPeminjaman) context).tolakKembali(model);
-                    }
-                }
+            clickHelper(btnTolakKembali, () -> {
+                ((DaftarPeminjaman) context).tolakKembali(model);
             });
 
-            btnSetujuKembali.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof DaftarPeminjaman) {
-                        ((DaftarPeminjaman) context).setujuiKembali(model);
-                    }
-                }
+            clickHelper(btnSetujuKembali, () -> {
+                ((DaftarPeminjaman) context).setujuiKembali(model);
             });
 
-
+            clickHelper(btnGiveRating, () -> {
+                Intent target = new Intent(context.getApplicationContext(), BeriRating.class);
+                target.putExtra("ID_PINJAM", model.getUid());
+                context.startActivity(target);
+            });
         }
+
+        private void clickHelper(Button btnTarget, Runnable run) {
+            btnTarget.setOnClickListener(view -> {
+                btnTarget.setEnabled(false);
+                if (context instanceof DaftarPeminjaman) {
+                    run.run();
+                }
+                btnTarget.setEnabled(true);
+            });
+        }
+
 
         private void setModel(com.example.perpusmini.models.PinjamModel model) {
             this.model = model;

@@ -79,17 +79,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     private void setupWelcomeMessage() {
         String email = firebaseAuth.getCurrentUser().getEmail();
 
-         db.collection(CollectionHelper.user).document(email).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-             @Override
-             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                 user = documentSnapshot.toObject(User.class);
-                 adminWelcomeMessage.setText("Selamat datang "+ user.getUsername());
-             }
-         }).addOnFailureListener(new OnFailureListener() {
-             @Override
-             public void onFailure(@NonNull Exception e) {
-             }
-         });
+        db.collection(CollectionHelper.user).document(email).get().addOnSuccessListener(documentSnapshot -> {
+            user = documentSnapshot.toObject(User.class);
+            adminWelcomeMessage.setText("Selamat datang "+ user.getUsername());
+        }).addOnFailureListener(err -> {});
     }
 
     @Override

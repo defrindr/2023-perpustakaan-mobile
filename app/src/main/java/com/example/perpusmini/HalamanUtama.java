@@ -17,26 +17,17 @@ public class HalamanUtama extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_halaman_utama);
 
-
         login = findViewById(R.id.menuUtamaLogin);
         guest = findViewById(R.id.menuUtamaGuest);
 
-
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-            }
+        login.setOnClickListener(view -> {
+            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
         });
 
-        guest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent target = new Intent(getApplicationContext(), DaftarBuku.class);
-                target.putExtra("LEVEL", Role.GUEST);
-                startActivity(target);
-            }
+        guest.setOnClickListener(view -> {
+            Intent target = new Intent(getApplicationContext(), DaftarBuku.class);
+            target.putExtra("LEVEL", Role.GUEST);
+            startActivity(target);
         });
     }
 }

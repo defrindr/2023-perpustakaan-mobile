@@ -34,19 +34,51 @@
             tools:ignore="TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/linLayout"
+        android:layout_width="match_parent"
         android:layout_below="@id/searchPengarang"
-        android:background="@color/colorPrimary"
-        android:text="Cari Buku"
-        android:textColor="@color/white"  android:layout_width="150dp"/>
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchPengarang"
+            android:background="@color/colorPrimary"
+            android:text="Cari Buku"
+            android:textColor="@color/white"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:paddingHorizontal="10dp"
+            android:layout_width="wrap_content" />
+
+        <Button
+            android:id="@+id/btnScanBarcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Scan Barcode"
+            android:padding="5dp"
+            android:paddingHorizontal="10dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white" />
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btnRemoveIsbn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Bersihkan Filter"
+            android:padding="5dp"
+            android:paddingHorizontal="10dp"
+            android:background="@color/red"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/ifNoBook"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/btnSearch"
+        android:layout_below="@id/linLayout"
         android:layout_marginTop="20dp"
         android:text="Buku tidak tersedia !"
         android:textAlignment="center"
@@ -56,7 +88,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
-        android:layout_below="@id/btnSearch"
+        android:layout_below="@id/linLayout"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
