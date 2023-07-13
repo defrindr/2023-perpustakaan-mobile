@@ -21,15 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".controllers.Peminjam.BeriRating"
-            android:exported="false" />
-        <activity
-            android:name=".UpdateProfile"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+        <activity android:name=".controllers.Peminjam.BeriRating" android:exported="true" />
+        <activity android:name=".UpdateProfile" android:exported="true" >
         </activity>
         <activity
             android:name=".HalamanUtama"
@@ -44,15 +37,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".DaftarBuku" />
-        <activity android:name=".controllers.Admin.AddBook" />
-        <activity android:name=".controllers.Admin.Home" />
-        <activity android:name=".controllers.Admin.UbahBuku" />
-        <activity android:name=".controllers.Peminjam.PeminjamHome" />
-        <activity android:name=".controllers.Peminjam.Pinjam" />
-        <activity android:name=".DaftarPeminjaman" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".SignInActivity" />
+        <activity android:name=".DaftarBuku" android:hardwareAccelerated="true" android:exported="true"/>
+        <activity android:name=".controllers.Admin.AddBook" android:exported="true" />
+        <activity android:name=".controllers.Admin.Home" android:exported="true"  />
+        <activity android:name=".controllers.Admin.UbahBuku" android:exported="true"  />
+        <activity android:name=".controllers.Peminjam.PeminjamHome" android:exported="true"  />
+        <activity android:name=".controllers.Peminjam.Pinjam" android:exported="true"  />
+        <activity android:name=".DaftarPeminjaman" android:exported="true"  />
+        <activity android:name=".SignUpActivity" android:exported="true"  />
+        <activity android:name=".SignInActivity" android:exported="true"  />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
