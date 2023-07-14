@@ -7,12 +7,78 @@
     android:layout_margin="5dp"
     tools:context=".DaftarPeminjaman">
 
+    <LinearLayout
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:background="#EEE"
+        >
+        <TextView
+            android:id="@+id/searchTanggal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:hint="Pilih Tanggal"/>
+        <Button
+            android:text="PICK"
+            android:id="@+id/pickDate"
+            android:background="#6AAC21"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:visibility="gone"
+            android:text="REMOVE"
+            android:id="@+id/removeDate"
+            android:background="#FF0000"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchPeminjam"
+        android:layout_width="match_parent"
+        android:layout_below="@id/datePicker"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Peminjam"
+            android:inputType="text"
+            android:height="48dp"
+            tools:ignore="TouchTargetSizeCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/linLayout"
+        android:layout_width="match_parent"
+        android:layout_below="@id/searchPeminjam"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchPengarang"
+            android:background="@color/colorPrimary"
+            android:text="Cari Data"
+            android:textColor="@color/white"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:paddingHorizontal="10dp"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/ifNoBorrow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="20dp"
         android:text="Data tidak tersedia !"
+        android:layout_below="@id/linLayout"
         android:textAlignment="center"
         android:textColor="#F10A0A"
         android:textSize="18dp"
@@ -21,6 +87,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_marginTop="20dp"
+        android:layout_below="@id/linLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>

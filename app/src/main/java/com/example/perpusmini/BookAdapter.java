@@ -57,6 +57,7 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
         holder.bookAvailable.setText("Jumlah Tersedia : " + model.getAvailable());
         holder.bookName.setText("Judul : " + model.getJudul());
         holder.bookTotal.setText("Pengarang : " + model.getPengarang());
+        holder.bookRating.setText("Rating : " + String.valueOf(model.getRatingAvg()));
 
 //        Handle Filter
         for (Map.Entry<String, String> query :
@@ -99,7 +100,7 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
     class Book extends RecyclerView.ViewHolder {
         Context context;
         com.example.perpusmini.models.Book buku;
-        TextView bookName, bookId, bookType, bookAvailable, bookTotal;
+        TextView bookName, bookId, bookType, bookAvailable, bookTotal, bookRating;
         Button btnAksiPinjam, btnAksiHapus, btnAksiUbah;
 
         ImageView imageView;
@@ -111,6 +112,7 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
             bookName = itemView.findViewById(R.id.bookName);
             bookType = itemView.findViewById(R.id.bookType);
             bookTotal = itemView.findViewById(R.id.bookTotal);
+            bookRating = itemView.findViewById(R.id.bookRating);
 
             context = ctx;
 

@@ -34,7 +34,19 @@ public class Book {
         this.gambar = gambar;
         this.kategori = kategori;
     }
+    public Book(String isbn, String judul, String pengarang, List<Integer> rating, int stok, String gambar, KategoriBuku kategori, int available) {
+        this.isbn = isbn;
+        this.judul = judul;
+        this.pengarang = pengarang;
+        this.stok = stok;
+        this.rating = rating;
+        this.available = available;
+        this.gambar = gambar;
+        this.kategori = kategori;
+    }
 
+    public void setRatingAvg() {
+    }
     public double getRatingAvg() {
 
         List<Integer> rating = this.rating;

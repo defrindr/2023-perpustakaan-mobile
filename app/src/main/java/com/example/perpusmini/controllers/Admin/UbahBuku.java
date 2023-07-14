@@ -154,13 +154,10 @@ public class UbahBuku extends AppCompatActivity {
         p1.setMessage("Menambahkan Buku");
         p1.show();
         String isbn = helper.getValue(editIsbn);
-        db.collection(CollectionHelper.buku).document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if ((task.isSuccessful()) && (task.getResult().exists() == false)) {
-                    helper.toastMessage("Nomor ISBN tidak ditemukan \nAtau terjadi masalah pada koneksi anda");
-                } else {
-                    Book schema = buildSchema();
+        db.collection(CollectionHelper.buku).document(isbn).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Book  oldBook = documentSnapshot.toObject(Book.class);
+                    Book schema = buildSchema(oldBook.getAvailable(), oldBook.getStok());
                     db.collection(CollectionHelper.buku).document(schema.getIsbn()).set(schema).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -169,23 +166,25 @@ public class UbahBuku extends AppCompatActivity {
                                 finish();
                             } else {
                                 helper.toastMessage("Coba kembali !");
+                                p1.cancel();
                             }
                         }
                     });
-                }
-                p1.cancel();
-            }
-        });
+                })
+                .addOnFailureListener(error -> {
+                    helper.toastMessage("Nomor ISBN tidak ditemukan \nAtau terjadi masalah pada koneksi anda");
+                    p1.cancel();
+                });
     }
 
-    private Book buildSchema() {
+    private Book buildSchema(int availablelama, int stokLama) {
         String isbn = helper.getValue(editIsbn);
         String judul = helper.getValue(editJudul).toUpperCase();
         String pengarang = helper.getValue(editPengarang);
-        int rating = Integer.parseInt(helper.getValue(editRating));
         int stok = Integer.parseInt(helper.getValue(editStok));
+        int available = availablelama + (stok - stokLama);
         String gambar = helper.getValue(editGambar);
 
-        return new Book(isbn, judul, pengarang, model.getRating(), stok, gambar, type);
+        return new Book(isbn, judul, pengarang, model.getRating(), stok, gambar, type, available);
     }
 }

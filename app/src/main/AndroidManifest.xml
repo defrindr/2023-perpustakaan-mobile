@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.perpusmini">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,6 +22,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+<!--        <activity-->
+<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"-->
+<!--            android:exported="false"-->
+<!--            tools:node="merge" />-->
+<!--        <activity-->
+<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"-->
+<!--            android:exported="false"-->
+<!--            tools:node="merge" />-->
+<!--        <activity-->
+<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"-->
+<!--            android:exported="false"-->
+<!--            tools:node="merge" />-->
         <activity android:name=".controllers.Peminjam.BeriRating" android:exported="true" />
         <activity android:name=".UpdateProfile" android:exported="true" >
         </activity>

@@ -21,6 +21,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, PeminjamanAdapter.Pinjam> {
     private Context context;
@@ -35,15 +36,48 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
         helper = new Helper(this.context);
     }
 
+    public void searchLike(String field, String argument) {
+        this.queries.put(field, argument);
+    }
+
+
     public void disableActionButton(Role r) {
         this.role = r;
+    }
+
+    protected void hideHolder(PeminjamanAdapter.Pinjam holder) {
+        holder.itemView.setVisibility(View.GONE);
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+        layoutParams.height = 0;
+        layoutParams.width = 0;
+        holder.itemView(layoutParams);
     }
 
     @Override
     protected void onBindViewHolder(@NonNull Pinjam holder, int position, @NonNull PinjamModel model) {
         holder.setModel(model);
+
+        System.out.println("COK");
+
         setupTextView(holder, model);
         setupButtonView(holder, model);
+
+
+//        Handle Filter
+        for (Map.Entry<String, String> query :
+                queries.entrySet()) {
+            if (query.getKey().equals("peminjam")) {
+                if (!model.getUser().getUsername().toUpperCase().contains(query.getValue().toUpperCase())) {
+                    hideHolder(holder);
+                }
+            }
+            if (query.getKey().equals("tanggal")) {
+                if (!query.getValue().equals("") && !model.getTglPinjam().equals(query.getValue())) {
+                    hideHolder(holder);
+                }
+            }
+        }
+
     }
 
     private void setupTextView(Pinjam holder, PinjamModel model) {
