@@ -139,7 +139,7 @@ public class DaftarPeminjaman extends AppCompatActivity {
     private void setupPeminjamanAdapter(boolean withFilter) {
         query = fStore.collection(CollectionHelper.pinjam);
         if (role == Role.PEMINJAM) {
-            query.whereEqualTo("user_reference", fAuth.getCurrentUser().getEmail());
+            query = query.whereEqualTo("user_reference", fAuth.getCurrentUser().getEmail());
         }
         FirestoreRecyclerOptions<? extends PinjamModel> options = new FirestoreRecyclerOptions.Builder<PinjamModel>().setQuery(query, PinjamModel.class).build();
         pAdapter = new PeminjamanAdapter(this, options);

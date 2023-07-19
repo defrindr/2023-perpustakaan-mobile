@@ -57,8 +57,6 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
     protected void onBindViewHolder(@NonNull Pinjam holder, int position, @NonNull PinjamModel model) {
         holder.setModel(model);
 
-        System.out.println("COK");
-
         setupTextView(holder, model);
         setupButtonView(holder, model);
 
@@ -72,7 +70,7 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
                 }
             }
             if (query.getKey().equals("tanggal")) {
-                if (!query.getValue().equals("") && !model.getTglPinjam().equals(query.getValue())) {
+                if (!query.getValue().equals("") && !model.getTglKembali().equals(query.getValue())) {
                     hideHolder(holder);
                 }
             }
@@ -107,6 +105,7 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
         holder.tvTglKembali.setText("Tanggal Kembali = " + model.getTglKembali());
         holder.tvDenda.setText("Denda = Rp " + denda);
         holder.tvStatus.setText("Status = " + model.getStatus().toString());
+        holder.tvNoHp.setText("No HP = " + model.getUser().getNoHp());
     }
 
 
@@ -148,7 +147,7 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
     class Pinjam extends RecyclerView.ViewHolder {
         Context context;
         PinjamModel model;
-        private TextView tvUid, tvUserReference, tvBukuReference, tvTglPinjam, tvTglKembali, tvDenda, tvStatus;
+        private TextView tvUid, tvUserReference, tvBukuReference, tvTglPinjam, tvTglKembali, tvDenda, tvStatus, tvNoHp;
         private Button btnHapus, btnTolak, btnSetuju, btnKembali, btnTolakKembali, btnSetujuKembali, btnGiveRating;
 
         public Pinjam(@NonNull View itemView, @NonNull Context ctx) {
@@ -163,6 +162,7 @@ public class PeminjamanAdapter extends FirestoreRecyclerAdapter<PinjamModel, Pem
             tvTglKembali = itemView.findViewById(R.id.tgl_kembali);
             tvDenda = itemView.findViewById(R.id.denda);
             tvStatus = itemView.findViewById(R.id.status);
+            tvNoHp = itemView.findViewById(R.id.user_phone);
 
             //            Button
             btnHapus = itemView.findViewById(R.id.btnHapus);

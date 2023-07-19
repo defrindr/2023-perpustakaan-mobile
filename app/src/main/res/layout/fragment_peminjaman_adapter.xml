@@ -39,6 +39,15 @@
             android:text="Buku"
             android:textSize="16dp" />
 
+
+        <TextView
+            android:id="@+id/user_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="No HP"
+            android:textSize="16dp" />
+
         <TextView
             android:id="@+id/tgl_pinjam"
             android:layout_width="match_parent"
