@@ -18,6 +18,7 @@ public class Book {
     private String judul, pengarang, gambar, isbn;
     private KategoriBuku kategori;
     private int stok = 0, available = 0;
+    private String flag = "1", causeDelete = "";
 
     private List<Integer> rating = new ArrayList<Integer>();
 
@@ -33,7 +34,9 @@ public class Book {
         this.available = stok;
         this.gambar = gambar;
         this.kategori = kategori;
+        this.flag = "1";
     }
+
     public Book(String isbn, String judul, String pengarang, List<Integer> rating, int stok, String gambar, KategoriBuku kategori, int available) {
         this.isbn = isbn;
         this.judul = judul;
@@ -43,6 +46,36 @@ public class Book {
         this.available = available;
         this.gambar = gambar;
         this.kategori = kategori;
+        this.flag = "1";
+    }
+
+    public Book(String isbn, String judul, String pengarang, List<Integer> rating, int stok, String gambar, KategoriBuku kategori, int available, String flag, String causeDelete) {
+        this.isbn = isbn;
+        this.judul = judul;
+        this.pengarang = pengarang;
+        this.stok = stok;
+        this.rating = rating;
+        this.available = available;
+        this.gambar = gambar;
+        this.kategori = kategori;
+        this.flag = flag;
+        this.causeDelete = causeDelete;
+    }
+
+    public String getCauseDelete() {
+        return causeDelete;
+    }
+
+    public void setCauseDelete(String causeDelete) {
+        this.causeDelete = causeDelete;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
     public void setRatingAvg() {

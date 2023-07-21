@@ -1,9 +1,7 @@
-package com.example.perpusmini;
+package com.example.perpusmini.controllers.Admin;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.perpusmini.controllers.Admin.UbahBuku;
+import com.example.perpusmini.DaftarBuku;
+import com.example.perpusmini.R;
 import com.example.perpusmini.controllers.Peminjam.Pinjam;
 import com.example.perpusmini.enums.Role;
-import com.example.perpusmini.helpers.DownloadImageTask;
 import com.example.perpusmini.models.Book;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -25,13 +26,13 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book> {
+public class DeleteBookAdapter extends FirestoreRecyclerAdapter<Book, DeleteBookAdapter.Book> {
     private Context context;
 
     private HashMap<String, String> queries = new HashMap<>();
     private Role role = Role.GUEST;
 
-    public BookAdapter(@NonNull Context context, @NonNull FirestoreRecyclerOptions options) {
+    public DeleteBookAdapter(@NonNull Context context, @NonNull FirestoreRecyclerOptions options) {
         super(options);
         this.context = context;
     }
@@ -61,6 +62,7 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
         holder.bookName.setText("Judul : " + model.getJudul());
         holder.bookTotal.setText("Pengarang : " + model.getPengarang());
         holder.bookRating.setText("Rating : " + String.valueOf(model.getRatingAvg()));
+        holder.deleteCause.setText("Alasan Dihapus : "+ String.valueOf(model.getCauseDelete()));
 
 //        Handle Filter
         for (Map.Entry<String, String> query :
@@ -95,25 +97,25 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
         holder.btnAksiUbah.setVisibility(View.GONE);
         holder.btnAksiHapus.setVisibility(View.GONE);
 
-        if (this.role == Role.ADMIN) {
-            holder.btnAksiUbah.setVisibility(View.VISIBLE);
-            holder.btnAksiHapus.setVisibility(View.VISIBLE);
-        } else if(this.role == Role.PEMINJAM) {
-            holder.btnAksiPinjam.setVisibility(View.VISIBLE);
-        }
+//        if (this.role == Role.ADMIN) {
+//            holder.btnAksiUbah.setVisibility(View.VISIBLE);
+//            holder.btnAksiHapus.setVisibility(View.VISIBLE);
+//        } else if(this.role == Role.PEMINJAM) {
+//            holder.btnAksiPinjam.setVisibility(View.VISIBLE);
+//        }
     }
 
     @NonNull
     @Override
     public Book onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.book_view, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.delete_book_view, viewGroup, false);
         return new Book(view, this.context);
     }
 
     class Book extends RecyclerView.ViewHolder {
         Context context;
         com.example.perpusmini.models.Book buku;
-        TextView bookName, bookId, bookType, bookAvailable, bookTotal, bookRating;
+        TextView bookName, bookId, bookType, bookAvailable, bookTotal, bookRating, deleteCause;
         Button btnAksiPinjam, btnAksiHapus, btnAksiUbah;
 
         ImageView imageView;
@@ -133,6 +135,7 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
             btnAksiHapus = itemView.findViewById(R.id.aksiHapusBuku);
             btnAksiUbah = itemView.findViewById(R.id.aksiUbah);
             imageView = itemView.findViewById(R.id.imageView);
+            deleteCause = itemView.findViewById(R.id.deleteCause);
 
             btnAksiHapus.setOnClickListener(
                     new View.OnClickListener() {

@@ -34,10 +34,25 @@
             tools:ignore="TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Spinner
+        android:id="@+id/filterRating"
+        android:layout_width="match_parent"
+        android:layout_below="@id/searchPengarang"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"/>
+
+
+    <Spinner
+        android:id="@+id/filterKategori"
+        android:layout_width="match_parent"
+        android:layout_below="@id/filterRating"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"/>
+
     <LinearLayout
         android:id="@+id/linLayout"
         android:layout_width="match_parent"
-        android:layout_below="@id/searchPengarang"
+        android:layout_below="@id/filterKategori"
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/btnSearch"

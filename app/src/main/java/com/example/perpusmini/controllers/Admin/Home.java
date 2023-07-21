@@ -30,7 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class Home extends AppCompatActivity implements View.OnClickListener {
 
 
-    private Button searchBook, addBook, logOut, btnListBorrow, btnUpdateProfile;
+    private Button searchBook, addBook, logOut, btnListBorrow, btnUpdateProfile, removedBook;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore db;
     private TextView adminWelcomeMessage;
@@ -50,6 +50,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         logOut = (Button) findViewById(R.id.logOut);
         btnListBorrow = findViewById(R.id.listBorrow);
         btnUpdateProfile = findViewById(R.id.updateProfile);
+        removedBook = findViewById(R.id.removedBook);
         db = FirebaseFirestore.getInstance();
 
         addBook.setOnClickListener(this);
@@ -73,6 +74,12 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 target.putExtra("LEVEL", user.getRole());
                 startActivity(target);
             }
+        });
+
+        removedBook.setOnClickListener(View -> {
+            Intent target = new Intent(getApplicationContext(), DeletedBookActivity.class);
+            target.putExtra("LEVEL", user.getRole());
+            startActivity(target);
         });
     }
 

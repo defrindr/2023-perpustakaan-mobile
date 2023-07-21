@@ -3,15 +3,27 @@ package com.example.perpusmini.controllers.Admin;
 import static java.lang.Boolean.FALSE;
 
 import android.app.ProgressDialog;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.perpusmini.R;
 import com.example.perpusmini.enums.CollectionHelper;
@@ -23,13 +35,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddBook extends AppCompatActivity implements View.OnClickListener {
 
-    Button button1;
+    Button button1, pickImage;
     KategoriBuku type;
     ProgressDialog p1;
     private TextInputLayout editIsbn;
@@ -41,6 +56,9 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
     private Spinner editKategori;
     private FirebaseFirestore db;
     private Helper helper;
+    private StorageReference storage;
+
+    public String imageUploaded = "";
 
     @Override
     public void onBackPressed() {
@@ -53,14 +71,16 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_book);
         FirebaseApp.initializeApp(this);
+        storage = FirebaseStorage.getInstance().getReference();
         helper = new Helper(this);
         editIsbn = findViewById(R.id.editIsbn);
         editJudul = findViewById(R.id.editJudul);
         editPengarang = findViewById(R.id.editPengarang);
         editRating = findViewById(R.id.editRating);
         editStok = findViewById(R.id.editStok);
-        editGambar = findViewById(R.id.editGambar);
+//        editGambar = findViewById(R.id.editGambar);
         editKategori = (Spinner) findViewById(R.id.spinner1);
+        pickImage = findViewById(R.id.pickImage);
 
         editRating.getEditText().setText(String.valueOf(0));
         editRating.setEnabled(FALSE);
@@ -73,6 +93,32 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
         db = FirebaseFirestore.getInstance();
         kategoriDropdown();
         button1.setOnClickListener(this);
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImage(uri);
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+        pickImage.setOnClickListener(View -> imagePicker(pickMedia));
+    }
+
+    private void imagePicker(ActivityResultLauncher<PickVisualMediaRequest> pickMedia) {
+
+        // Include only one of the following calls to launch(), depending on the types
+        // of media that you want to let the user choose from.
+
+        // Launch the photo picker and let the user choose only images.
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
     }
 
     private void kategoriDropdown() {
@@ -102,7 +148,7 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
         valid = valid && helper.notEmpty(editPengarang);
         valid = valid && helper.notEmpty(editRating);
         valid = valid && helper.notEmpty(editStok);
-        valid = valid && helper.notEmpty(editGambar);
+        valid = valid && !imageUploaded.equals("");
 
         if (valid == false) return;
 
@@ -119,7 +165,7 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                     String pengarang = helper.getValue(editPengarang);
                     List<Integer> rating = new ArrayList<Integer>();
                     int stok = Integer.parseInt(helper.getValue(editStok));
-                    String gambar = helper.getValue(editGambar);
+                    String gambar = imageUploaded;
 
                     Book b = new Book(isbn, judul, pengarang, rating, stok, gambar, type);
                     db.document(CollectionHelper.buku + "/" + isbn).set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -138,6 +184,44 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                 p1.cancel();
             }
         });
+    }
+
+    private void uploadImage(Uri imageUri) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploaded = uri.toString();
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    private String getImageFilePath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
     }
 
     @Override

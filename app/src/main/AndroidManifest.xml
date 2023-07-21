@@ -11,9 +11,12 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,21 +25,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-<!--        <activity-->
-<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity"-->
-<!--            android:exported="false"-->
-<!--            tools:node="merge" />-->
-<!--        <activity-->
-<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity"-->
-<!--            android:exported="false"-->
-<!--            tools:node="merge" />-->
-<!--        <activity-->
-<!--            android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity"-->
-<!--            android:exported="false"-->
-<!--            tools:node="merge" />-->
-        <activity android:name=".controllers.Peminjam.BeriRating" android:exported="true" />
-        <activity android:name=".UpdateProfile" android:exported="true" >
-        </activity>
+        <activity
+            android:name=".controllers.Admin.DeletedBookActivity"
+            android:exported="false" />
+        <!-- <activity -->
+        <!-- android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity" -->
+        <!-- android:exported="false" -->
+        <!-- tools:node="merge" /> -->
+        <!-- <activity -->
+        <!-- android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyActivity" -->
+        <!-- android:exported="false" -->
+        <!-- tools:node="merge" /> -->
+        <!-- <activity -->
+        <!-- android:name="androidx.test.core.app.InstrumentationActivityInvoker$EmptyFloatingActivity" -->
+        <!-- android:exported="false" -->
+        <!-- tools:node="merge" /> -->
+        <activity
+            android:name=".controllers.Peminjam.BeriRating"
+            android:exported="true" />
+        <activity
+            android:name=".UpdateProfile"
+            android:exported="true"></activity>
         <activity
             android:name=".HalamanUtama"
             android:exported="true">
@@ -50,23 +59,54 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".DaftarBuku" android:hardwareAccelerated="true" android:exported="true"/>
-        <activity android:name=".controllers.Admin.AddBook" android:exported="true" />
-        <activity android:name=".controllers.Admin.Home" android:exported="true"  />
-        <activity android:name=".controllers.Admin.UbahBuku" android:exported="true"  />
-        <activity android:name=".controllers.Peminjam.PeminjamHome" android:exported="true"  />
-        <activity android:name=".controllers.Peminjam.Pinjam" android:exported="true"  />
-        <activity android:name=".DaftarPeminjaman" android:exported="true"  />
-        <activity android:name=".SignUpActivity" android:exported="true"  />
-        <activity android:name=".SignInActivity" android:exported="true"  />
+        <activity
+            android:name=".DaftarBuku"
+            android:exported="true"
+            android:hardwareAccelerated="true" />
+        <activity
+            android:name=".controllers.Admin.AddBook"
+            android:exported="true" />
+        <activity
+            android:name=".controllers.Admin.Home"
+            android:exported="true" />
+        <activity
+            android:name=".controllers.Admin.UbahBuku"
+            android:exported="true" />
+        <activity
+            android:name=".controllers.Peminjam.PeminjamHome"
+            android:exported="true" />
+        <activity
+            android:name=".controllers.Peminjam.Pinjam"
+            android:exported="true" />
+        <activity
+            android:name=".DaftarPeminjaman"
+            android:exported="true" />
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SignInActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_notification" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:resource="@color/colorAccent" /> <!-- Trigger Google Play services to install the backported photo picker module. -->
+        <service
+            android:name="com.google.android.gms.metadata.ModuleDependencies"
+            android:enabled="false"
+            android:exported="false"
+            tools:ignore="MissingClass">
+            <intent-filter>
+                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
+            </intent-filter>
 
+            <meta-data
+                android:name="photopicker_activity:0:required"
+                android:value="" />
+        </service>
     </application>
 
 </manifest>

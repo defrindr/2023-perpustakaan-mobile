@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".DaftarBuku">
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/searchJudul"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Judul Buku"-->
+<!--            android:height="48dp"-->
+<!--            android:inputType="text"-->
+<!--            tools:ignore="TouchTargetSizeCheck,DuplicateClickableBoundsCheck" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/searchPengarang"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_below="@id/searchJudul"-->
+<!--        android:layout_height="wrap_content">-->
+
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Pengarang"-->
+<!--            android:inputType="text"-->
+<!--            android:height="48dp"-->
+<!--            tools:ignore="TouchTargetSizeCheck" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--    <Spinner-->
+<!--        android:id="@+id/filterRating"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_below="@id/searchPengarang"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginTop="10dp"/>-->
+
+
+<!--    <Spinner-->
+<!--        android:id="@+id/filterKategori"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_below="@id/filterRating"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginTop="10dp"/>-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_below="@id/filterKategori"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <Button-->
+<!--            android:id="@+id/btnSearch"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/searchPengarang"-->
+<!--            android:background="@color/colorPrimary"-->
+<!--            android:text="Cari Buku"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:padding="5dp"-->
+<!--            android:paddingHorizontal="10dp"-->
+<!--            android:layout_width="wrap_content" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btnScanBarcode"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:text="Scan Barcode"-->
+<!--            android:padding="5dp"-->
+<!--            android:paddingHorizontal="10dp"-->
+<!--            android:background="@color/colorPrimary"-->
+<!--            android:textColor="@color/white" />-->
+<!--        <Button-->
+<!--            android:visibility="gone"-->
+<!--            android:id="@+id/btnRemoveIsbn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:text="Bersihkan Filter"-->
+<!--            android:padding="5dp"-->
+<!--            android:paddingHorizontal="10dp"-->
+<!--            android:background="@color/red"-->
+<!--            android:textColor="@color/white" />-->
+<!--    </LinearLayout>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/ifNoBook"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@id/linLayout"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="Buku tidak tersedia !"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textColor="#F10A0A"-->
+<!--        android:textSize="18dp"-->
+<!--        android:gravity="center_horizontal" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</RelativeLayout>

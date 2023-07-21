@@ -99,19 +99,12 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/editGambar"
+            <Button
+                android:id="@+id/pickImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_gambar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Gambar"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:text="Pick Image"
+                />
 
             <Spinner
                 android:id="@+id/spinner1"
