@@ -2,10 +2,19 @@ package com.example.perpusmini;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +22,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.perpusmini.enums.CollectionHelper;
 import com.example.perpusmini.helpers.Helper;
@@ -29,7 +39,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private TextInputLayout tilPassword;
     private TextInputLayout tilKonfirmasiPassword;
 
-    private Button tombolRegister;
+    private Button tombolRegister, pickImage;
     private TextView toSignIn;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
@@ -52,6 +65,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Spinner userType;
     private Role type;
     private Helper helper;
+    private StorageReference storage;
+
+    private  String imageUploaded;
 
 
 
@@ -75,8 +91,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         progressDialog.setCancelable(false);
         agreement = findViewById(R.id.snk);
         userType = findViewById(R.id.userType);
+        pickImage = findViewById(R.id.pickImage);
 
         FirebaseApp.initializeApp(this);
+        storage = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         tombolRegister.setOnClickListener(this);
@@ -84,13 +102,41 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         agreement.setOnClickListener(this);
 
         setupDropdownRole();
+
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImage(uri);
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+        pickImage.setOnClickListener(View -> imagePicker(pickMedia));
     }
+
+    private void imagePicker(ActivityResultLauncher<PickVisualMediaRequest> pickMedia) {
+
+        // Include only one of the following calls to launch(), depending on the types
+        // of media that you want to let the user choose from.
+
+        // Launch the photo picker and let the user choose only images.
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
+    }
+
 
     private void setupDropdownRole() {
 
         List<Role> list = new ArrayList<>();
         list.add(Role.PEMINJAM);
-        list.add(Role.ADMIN);
+//        list.add(Role.ADMIN);
 
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list);
@@ -160,6 +206,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        if (type == Role.PEMINJAM) {
+//        same password and konfirmasi password
+            if (imageUploaded.equals("")) {
+                helper.toastMessage("Pastikan anda sudah mengunggah KTP.");
+                return;
+            }
+        }
+
         progressDialog.setMessage("Registering User ... ");
         progressDialog.show();
 
@@ -188,8 +242,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         Role role = type;
         String noHp = helper.getValue(tilNoHp);
         String alamat = helper.getValue(tilAlamat);
+        if(imageUploaded.equals("")) {
+            helper.toastMessage("Pastikan anda sudah mengunggah bukti foto");
+            return;
+        }
         if (type==Role.PEMINJAM) {
-            userModel = new Peminjam(username, email, role, noHp, alamat);
+            userModel = new Peminjam(username, email, role, noHp, alamat, imageUploaded);
         } else {
             userModel = new Admin(username, email, role);
         }
@@ -227,6 +285,55 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             helper.toastMessage("Terjadi kesalahan saat mendaftar ! Silahkan coba kembali.");
         }
     }
+
+
+    private void uploadImage(Uri imageUri) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        pickImage.setText("Loading....");
+        pickImage.setEnabled(false);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploaded = uri.toString();
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+
+                                    pickImage.setText("Unggah Foto KTP");
+                                    pickImage.setEnabled(true);
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+
+                        pickImage.setText("Unggah Foto KTP");
+                        pickImage.setEnabled(true);
+                    });
+        }
+    }
+
+    private String getImageFilePath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
+    }
+
 
     @Override
     public void onClick(View v) {

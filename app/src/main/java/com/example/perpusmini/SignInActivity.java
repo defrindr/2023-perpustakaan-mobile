@@ -111,11 +111,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         }
 
                         registerFcmToken();
-                        helper.toastMessage("Login Berhasil");
                         if (obj.getRole() == Role.PEMINJAM) {
+                            if(obj.getStatus() == 0) {
+                                firebaseAuth.signOut();
+                                helper.toastMessage("Menunggu akun dikonfirmasi");
+                                return;
+                            }
+                            helper.toastMessage("Login Berhasil");
                                 startActivity(new Intent(getApplicationContext(), PeminjamHome.class));
                             finish();
                         } else if(obj.getRole() == Role.ADMIN) {
+                            helper.toastMessage("Login Berhasil");
                             startActivity(new Intent(getApplicationContext(), Home.class));
                             finish();
                         }

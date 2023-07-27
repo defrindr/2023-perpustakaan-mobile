@@ -69,6 +69,14 @@
                 android:text="Buku Dihapus" />
 
             <Button
+                android:id="@+id/manageUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Managemen Pengguna" />
+
+            <Button
                 android:id="@+id/updateProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

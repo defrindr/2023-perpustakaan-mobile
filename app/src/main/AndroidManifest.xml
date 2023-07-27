@@ -26,9 +26,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".controllers.Admin.ManageUserActivity"
+            android:exported="false"
+            android:label="@string/title_activity_manage_user"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".controllers.Admin.DeletedBookActivity"
-            android:exported="false" />
-        <!-- <activity -->
+            android:exported="false" /> <!-- <activity -->
         <!-- android:name="androidx.test.core.app.InstrumentationActivityInvoker$BootstrapActivity" -->
         <!-- android:exported="false" -->
         <!-- tools:node="merge" /> -->
@@ -45,7 +49,7 @@
             android:exported="true" />
         <activity
             android:name=".UpdateProfile"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".HalamanUtama"
             android:exported="true">

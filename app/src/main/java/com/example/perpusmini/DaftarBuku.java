@@ -8,7 +8,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import com.example.perpusmini.controllers.Peminjam.Pinjam;
 import com.example.perpusmini.enums.KategoriBuku;
+import com.example.perpusmini.enums.StatusPinjam;
+import com.example.perpusmini.models.PinjamModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -205,6 +208,17 @@ public class DaftarBuku extends AppCompatActivity {
             ifNoBook.setVisibility(View.INVISIBLE);
             recycle.setVisibility(View.VISIBLE);
         }
+    }
+
+    public  void getFirstComebackDate(Book model, TextView target) {
+        db.collection(CollectionHelper.pinjam).whereEqualTo("buku_reference", model.getIsbn()).whereIn("status", Arrays.asList(StatusPinjam.DIPINJAM, StatusPinjam.MENUNGGU_PERSETUJUAN_KEMBALI)).orderBy("tglKembali", Query.Direction.ASCENDING).get().addOnSuccessListener(snapshots -> {
+            List<PinjamModel> pinjams = snapshots.toObjects(PinjamModel.class);
+
+            target.setText("Tanggal kembali Tercepat :" + pinjams.get(0).getTglKembali());
+
+        }).addOnFailureListener(error -> {
+            System.out.println("ERROR" + error.getMessage());
+        });
     }
 
 

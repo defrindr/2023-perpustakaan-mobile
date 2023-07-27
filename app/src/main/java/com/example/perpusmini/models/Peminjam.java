@@ -16,6 +16,15 @@ public class Peminjam extends User {
         this.alamat = alamat;
     }
 
+    public Peminjam(String username, String email, Role role, String noHp, String alamat, String ktp) {
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.noHp = noHp;
+        this.alamat = alamat;
+        this.fotoKtp = ktp;
+    }
+
     public String getUsername() {
         return username;
     }

@@ -101,6 +101,13 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
         } else if(this.role == Role.PEMINJAM) {
             holder.btnAksiPinjam.setVisibility(View.VISIBLE);
         }
+
+        System.out.println(model.getAvailable() == 0);
+        if(model.getAvailable() == 0) {
+            holder.btnAksiPinjam.setVisibility(View.GONE);
+            ((DaftarBuku) context).getFirstComebackDate(model, holder.bookAvailable);
+        }
+
     }
 
     @NonNull
