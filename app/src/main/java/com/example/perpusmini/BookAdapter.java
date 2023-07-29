@@ -108,6 +108,13 @@ public class BookAdapter extends FirestoreRecyclerAdapter<Book, BookAdapter.Book
             ((DaftarBuku) context).getFirstComebackDate(model, holder.bookAvailable);
         }
 
+
+        holder.imageView.setOnClickListener(View -> {
+            Intent intent = new Intent(context, DetailBukuActivity.class);
+            intent.putExtra("ISBN_BUKU", model.getIsbn());
+            context.startActivity(intent);
+        });
+
     }
 
     @NonNull

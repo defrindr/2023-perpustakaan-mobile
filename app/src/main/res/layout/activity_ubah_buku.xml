@@ -99,13 +99,45 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/pickImage"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pick Image"
-                />
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/pickImage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Gambar Buku"
+                    />
+                <Button
+                    android:id="@+id/pickImageDepan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Cover Depan"
+                    />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/pickImageBelakang"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Cover Belakang"
+                    />
+                <Button
+                    android:id="@+id/pickImageDaftarIsi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Daftar Isi"
+                    />
+            </LinearLayout>
             <Spinner
                 android:id="@+id/spinner1"
                 android:layout_width="match_parent"

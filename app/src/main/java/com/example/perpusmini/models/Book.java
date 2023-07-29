@@ -15,7 +15,7 @@ import java.util.ListIterator;
 
 public class Book {
 
-    private String judul, pengarang, gambar, isbn;
+    private String judul, pengarang, gambar, isbn, gambarDepan, gambarBelakang, gambarDaftarIsi;
     private KategoriBuku kategori;
     private int stok = 0, available = 0;
     private String flag = "1", causeDelete = "";
@@ -23,6 +23,30 @@ public class Book {
     private List<Integer> rating = new ArrayList<Integer>();
 
     public Book() {
+    }
+
+    public String getGambarDepan() {
+        return gambarDepan;
+    }
+
+    public void setGambarDepan(String gambarDepan) {
+        this.gambarDepan = gambarDepan;
+    }
+
+    public String getGambarBelakang() {
+        return gambarBelakang;
+    }
+
+    public void setGambarBelakang(String gambarBelakang) {
+        this.gambarBelakang = gambarBelakang;
+    }
+
+    public String getGambarDaftarIsi() {
+        return gambarDaftarIsi;
+    }
+
+    public void setGambarDaftarIsi(String gambarDaftarIsi) {
+        this.gambarDaftarIsi = gambarDaftarIsi;
     }
 
     public Book(String isbn, String judul, String pengarang, List<Integer> rating, int stok, String gambar, KategoriBuku kategori) {

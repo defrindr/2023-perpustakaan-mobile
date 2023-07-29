@@ -3,6 +3,7 @@ package com.example.perpusmini.controllers.Admin;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -42,7 +43,7 @@ import java.util.Arrays;
 
 public class UbahBuku extends AppCompatActivity {
 
-    Button button1, pickImage;
+    Button button1, pickImage, pickImageDepan, pickImageBelakang, pickImageDaftarIsi;
     KategoriBuku type;
     ProgressDialog p1;
     private TextInputLayout editIsbn;
@@ -57,8 +58,7 @@ public class UbahBuku extends AppCompatActivity {
     Book model;
     String isbn;
     private StorageReference storage;
-
-    public String imageUploaded = "";
+    public String imageUploaded = "", imageUploadedGambarDepan = "", imageUploadedGambarBelakang = "", imageUploadedGambarDaftarIsi = "";
 
     @Override
     public void onBackPressed() {
@@ -87,6 +87,9 @@ public class UbahBuku extends AppCompatActivity {
 
         button1 = (Button) findViewById(R.id.button1);
         pickImage = findViewById(R.id.pickImage);
+        pickImageDepan = findViewById(R.id.pickImageDepan);
+        pickImageBelakang = findViewById(R.id.pickImageBelakang);
+        pickImageDaftarIsi = findViewById(R.id.pickImageDaftarIsi);
         p1 = new ProgressDialog(this);
         p1.setCancelable(false);
         button1.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +114,49 @@ public class UbahBuku extends AppCompatActivity {
                     // Callback is invoked after the user selects a media item or closes the
                     // photo picker.
                     if (uri != null) {
-                        uploadImage(uri);
+                        uploadImage(uri, pickImage);
+
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMediaGambarDepan =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImageDepan(uri, pickImageDepan);
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMediaGambarDaftarIsi =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImageDaftarIsi(uri, pickImageDaftarIsi);
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMediaGambarBelakang =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImageBelakang(uri, pickImageBelakang);
                         Log.d("PhotoPicker", "Selected URI: " + uri);
                     } else {
                         Log.d("PhotoPicker", "No media selected");
@@ -119,6 +164,11 @@ public class UbahBuku extends AppCompatActivity {
                 });
 
         pickImage.setOnClickListener(View -> imagePicker(pickMedia));
+
+        pickImageDepan.setOnClickListener(View -> imagePicker(pickMediaGambarDepan));
+        pickImageBelakang.setOnClickListener(View -> imagePicker(pickMediaGambarBelakang));
+        pickImageDaftarIsi.setOnClickListener(View -> imagePicker(pickMediaGambarDaftarIsi));
+
     }
 
     private void imagePicker(ActivityResultLauncher<PickVisualMediaRequest> pickMedia) {
@@ -160,6 +210,9 @@ public class UbahBuku extends AppCompatActivity {
         setFieldValue(editRating, String.valueOf(resultRating));
 //        setFieldValue(editGambar, model.getGambar());
         imageUploaded = String.valueOf(model.getGambar());
+        imageUploadedGambarDepan = String.valueOf(model.getGambarDepan());
+        imageUploadedGambarBelakang = String.valueOf(model.getGambarBelakang());
+        imageUploadedGambarDaftarIsi = String.valueOf(model.getGambarDaftarIsi());
         setFieldValue(editStok, String.valueOf(model.getStok()));
     }
 
@@ -192,6 +245,9 @@ public class UbahBuku extends AppCompatActivity {
         valid = valid && helper.notEmpty(editRating);
         valid = valid && helper.notEmpty(editStok);
         valid = valid && !imageUploaded.equals("");
+        valid = valid && !imageUploadedGambarDepan.equals("");
+        valid = valid && !imageUploadedGambarBelakang.equals("");
+        valid = valid && !imageUploadedGambarDaftarIsi.equals("");
 
         if (valid == false) return;
 
@@ -221,7 +277,7 @@ public class UbahBuku extends AppCompatActivity {
                 });
     }
 
-    private void uploadImage(Uri imageUri) {
+    private void uploadImage(Uri imageUri, Button target) {
         // Use the imageUri to get the actual file path from the content resolver
         String filePath = getImageFilePath(imageUri);
 
@@ -238,6 +294,8 @@ public class UbahBuku extends AppCompatActivity {
                         imageRef.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     imageUploaded = uri.toString();
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
                                     Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
                                 });
                     })
@@ -247,6 +305,94 @@ public class UbahBuku extends AppCompatActivity {
                     });
         }
     }
+
+    private void uploadImageDepan(Uri imageUri, Button target) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploadedGambarDepan = uri.toString();
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+    private void uploadImageBelakang(Uri imageUri, Button target) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploadedGambarBelakang = uri.toString();
+
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    private void uploadImageDaftarIsi(Uri imageUri, Button target) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploadedGambarDaftarIsi = uri.toString();
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
 
     private String getImageFilePath(Uri uri) {
         String[] projection = {MediaStore.Images.Media.DATA};
@@ -264,8 +410,13 @@ public class UbahBuku extends AppCompatActivity {
         String pengarang = helper.getValue(editPengarang);
         int stok = Integer.parseInt(helper.getValue(editStok));
         int available = availablelama + (stok - stokLama);
-//        String gambar = helper.getValue(editGambar);
 
-        return new Book(isbn, judul, pengarang, model.getRating(), stok, imageUploaded, type, available);
+        Book schema = new Book(isbn, judul, pengarang, model.getRating(), stok, imageUploaded, type, available);
+
+        schema.setGambarDaftarIsi(imageUploadedGambarDaftarIsi);
+        schema.setGambarDepan(imageUploadedGambarDepan);
+        schema.setGambarBelakang(imageUploadedGambarBelakang);
+
+        return schema;
     }
 }

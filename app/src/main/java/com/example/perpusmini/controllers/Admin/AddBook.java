@@ -4,6 +4,7 @@ import static java.lang.Boolean.FALSE;
 
 import android.app.ProgressDialog;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -41,10 +42,12 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class AddBook extends AppCompatActivity implements View.OnClickListener {
 
-    Button button1, pickImage;
+    Button button1, pickImage, pickImageDepan, pickImageBelakang, pickImageDaftarIsi;
     KategoriBuku type;
     ProgressDialog p1;
     private TextInputLayout editIsbn;
@@ -58,7 +61,7 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
     private Helper helper;
     private StorageReference storage;
 
-    public String imageUploaded = "";
+    public String imageUploaded = "", imageUploadedGambarDepan = "", imageUploadedGambarBelakang = "", imageUploadedGambarDaftarIsi = "";
 
     @Override
     public void onBackPressed() {
@@ -81,6 +84,9 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
 //        editGambar = findViewById(R.id.editGambar);
         editKategori = (Spinner) findViewById(R.id.spinner1);
         pickImage = findViewById(R.id.pickImage);
+        pickImageDepan  = findViewById(R.id.pickImageDepan);
+        pickImageBelakang = findViewById(R.id.pickImageBelakang);
+        pickImageDaftarIsi = findViewById(R.id.pickImageDaftarIsi);
 
         editRating.getEditText().setText(String.valueOf(0));
         editRating.setEnabled(FALSE);
@@ -100,7 +106,49 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                     // Callback is invoked after the user selects a media item or closes the
                     // photo picker.
                     if (uri != null) {
-                        uploadImage(uri);
+                        uploadImage(uri, pickImage);
+
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMediaGambarDepan =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImageDepan(uri, pickImageDepan);
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMediaGambarDaftarIsi =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImageDaftarIsi(uri, pickImageDaftarIsi);
+                        Log.d("PhotoPicker", "Selected URI: " + uri);
+                    } else {
+                        Log.d("PhotoPicker", "No media selected");
+                    }
+                });
+
+        // Registers a photo picker activity launcher in single-select mode.
+        ActivityResultLauncher<PickVisualMediaRequest> pickMediaGambarBelakang =
+                registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        uploadImageBelakang(uri, pickImageBelakang);
                         Log.d("PhotoPicker", "Selected URI: " + uri);
                     } else {
                         Log.d("PhotoPicker", "No media selected");
@@ -108,6 +156,11 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                 });
 
         pickImage.setOnClickListener(View -> imagePicker(pickMedia));
+
+        pickImageDepan.setOnClickListener(View -> imagePicker(pickMediaGambarDepan));
+        pickImageBelakang.setOnClickListener(View -> imagePicker(pickMediaGambarBelakang));
+        pickImageDaftarIsi.setOnClickListener(View -> imagePicker(pickMediaGambarDaftarIsi));
+
     }
 
     private void imagePicker(ActivityResultLauncher<PickVisualMediaRequest> pickMedia) {
@@ -124,7 +177,7 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
     private void kategoriDropdown() {
         KategoriBuku[] A = KategoriBuku.values();
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, A);
+        ArrayAdapter<? extends KategoriBuku> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, A);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editKategori.setAdapter(adapter);
         editKategori.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -149,6 +202,9 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
         valid = valid && helper.notEmpty(editRating);
         valid = valid && helper.notEmpty(editStok);
         valid = valid && !imageUploaded.equals("");
+        valid = valid && !imageUploadedGambarDepan.equals("");
+        valid = valid && !imageUploadedGambarBelakang.equals("");
+        valid = valid && !imageUploadedGambarDaftarIsi.equals("");
 
         if (valid == false) return;
 
@@ -168,6 +224,9 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                     String gambar = imageUploaded;
 
                     Book b = new Book(isbn, judul, pengarang, rating, stok, gambar, type);
+                    b.setGambarDepan(imageUploadedGambarDepan);
+                    b.setGambarBelakang(imageUploadedGambarBelakang);
+                    b.setGambarDaftarIsi(imageUploadedGambarDaftarIsi);
                     db.document(CollectionHelper.buku + "/" + isbn).set(b).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -186,7 +245,7 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
         });
     }
 
-    private void uploadImage(Uri imageUri) {
+    private void uploadImage(Uri imageUri, Button target) {
         // Use the imageUri to get the actual file path from the content resolver
         String filePath = getImageFilePath(imageUri);
 
@@ -203,6 +262,95 @@ public class AddBook extends AppCompatActivity implements View.OnClickListener {
                         imageRef.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     imageUploaded = uri.toString();
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    private void uploadImageDepan(Uri imageUri, Button target) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploadedGambarDepan = uri.toString();
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+    private void uploadImageBelakang(Uri imageUri, Button target) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploadedGambarBelakang = uri.toString();
+
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
+                                    Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
+                                });
+                    })
+                    .addOnFailureListener(exception -> {
+                        // Image upload failed
+                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    private void uploadImageDaftarIsi(Uri imageUri, Button target) {
+        // Use the imageUri to get the actual file path from the content resolver
+        String filePath = getImageFilePath(imageUri);
+
+        if (filePath != null) {
+            File file = new File(filePath);
+            String fileName = file.getName();
+            StorageReference imageRef = storage.child("images/" + fileName);
+
+            // Upload the image to Firebase Storage
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Image upload successful
+                        // You can retrieve the download URL if needed
+                        imageRef.getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    imageUploadedGambarDaftarIsi = uri.toString();
+                                    target.setBackgroundColor(Color.parseColor("red"));
+                                    target.setTextColor(Color.parseColor("white"));
                                     Toast.makeText(this, "Image berhasil diunggah", Toast.LENGTH_SHORT).show();
                                 });
                     })
