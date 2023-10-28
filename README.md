@@ -1,5 +1,5 @@
 # PERPUSTAKAAN
-Aplikasi perpustakaan sederhana menggunakan firebase auth dan juga firestore.
+Aplikasi perpustakaan sederhana berbasis mobile menggunakan firebase auth dan juga firestore.
 
 ## ROLE
 - TAMU (Tidak perlu login)
